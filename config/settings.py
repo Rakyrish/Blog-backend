@@ -27,7 +27,13 @@ SECRET_KEY = 'django-insecure-0-@#okki(!ahi1(akw#rf$el#75604ko4&lc4eb@6=qy%9hlp0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['your-backend-service-name.onrender.com']
+ALLOWED_HOSTS = [
+    'blog-backend-1-mxtg.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    # you can add other domains you use
+]
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
