@@ -14,26 +14,37 @@ from pathlib import Path
 from datetime import timedelta
 import dj_database_url
 from dotenv import load_dotenv
+load_dotenv()  # This loads the .env file into os.environ
 
-# Load environment variables from .env file
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-0-@#okki(!ahi1(akw#rf$el#75604ko4&lc4eb@6=qy%9hlp0')
+SECRET_KEY = 'django-insecure-0-@#okki(!ahi1(akw#rf$el#75604ko4&lc4eb@6=qy%9hlp0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'blog-backend-1-mxtg.onrender.com',
     'localhost',
     '127.0.0.1',
+    # you can add other domains you use
 ]
 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
 # Application definition
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,84 +65,77 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'corsheaders',
     'rest_framework_simplejwt',
-
-    # Local apps
-    'posts',
-]
-
-# Middleware
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
-]
-
-# CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5000',
-    'http://localhost:3000',
-   
-]
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
-CORS_ALLOW_HEADERS = [
-    'Content-Type',
-    'X-CSRFToken',
-    'Authorization',
-]
-
-# CSRF Settings
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5000',
-    'http://localhost:3000',
-    'https://blog-backend-1-mxtg.onrender.com',
     
+    #local apps
+    'posts'
+
 ]
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SECURE = os.getenv('DJANGO_CSRF_COOKIE_SECURE', 'False') == 'True'  # True in production
-CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF token
 
-# Session Settings
-SESSION_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = os.getenv('DJANGO_SESSION_COOKIE_SECURE', 'False') == 'True'  # True in production
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
 
-# REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication', 
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
+    ]
 }
 
-# Simple JWT Settings
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Required by allauth
+    'allauth.account.middleware.AccountMiddleware',
+]
+
+# CORS settings
+CORS_ORIGIN_WHITELIST = (
+'http://localhost:5000',
+'http://localhost:8000',
+)
+
+CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for development; restrict in production
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5000',  # Frontend origin
+    'http://localhost:3000',  # Add other frontend origins if needed
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Allow sessionid cookie
+
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5000',  # Match frontend origin
+    'http://localhost:3000',  # Add other origins if needed
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
+CORS_ALLOW_HEADERS = ['Content-Type', "X-CSRFToken", ]
+ROOT_URLCONF = 'config.urls'
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'AUTH_COOKIE': 'access_token',
+    'AUTH_COOKIE': 'access_token',  # Cookie name
     'AUTH_COOKIE_HTTP_ONLY': True,
-    'AUTH_COOKIE_SECURE': os.getenv('DJANGO_AUTH_COOKIE_SECURE', 'False') == 'True',  # True in production
-    'AUTH_COOKIE_SAMESITE': 'None',
+    'AUTH_COOKIE_SECURE': False,  # Set to True in production
+    'AUTH_COOKIE_SAMESITE': 'Lax',
 }
 
-# Email Backend (for development)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-SITE_ID = 1
-
-# URL Configuration
-ROOT_URLCONF = 'config.urls'
-
-# Template Configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -147,19 +151,42 @@ TEMPLATES = [
     },
 ]
 
-# WSGI Application
 WSGI_APPLICATION = 'config.wsgi.application'
 
+
 # Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': '42162196',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+import os
+import dj_database_url
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=os.getenv("DATABASE_URL"),
         conn_max_age=600,
-        ssl_require=os.getenv('DJANGO_SSL_REQUIRE', 'True') == 'True',
+        ssl_require=True  # Important for Render PostgreSQL
     )
 }
 
-# Password Validation
+print("Database configuration:", os.getenv("DATABASE_URL"))
+
+
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -175,17 +202,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
+# https://docs.djangoproject.com/en/5.2/topics/i18n/
+
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
+
 USE_TZ = True
 
-# Static Files
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default Primary Key Field Type
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
