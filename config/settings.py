@@ -105,27 +105,48 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
 'http://localhost:5000',
 'http://localhost:8000',
+'https://your-netlify-site.netlify.app'
 )
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for development; restrict in production
+# CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for development; restrict in production
 # CORS settings
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:5000',  # Frontend origin
+#     'http://localhost:8000',  # Add other frontend origins if needed
+# ]
+
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5000',  # Frontend origin
-    'http://localhost:3000',  # Add other frontend origins if needed
+    'http://localhost:5000',
+    'http://localhost:8000',
+    'https://your-netlify-site.netlify.app',  # <-- add this if you're using Netlify
 ]
 
-CORS_ALLOW_CREDENTIALS = True  # Allow sessionid cookie
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5000',  # Match frontend origin
-    'http://localhost:3000',  # Add other origins if needed
+    'http://localhost:8000',
+    'https://your-netlify-site.netlify.app'  # Add other origins if needed
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 CORS_ALLOW_HEADERS = ['Content-Type', "X-CSRFToken", ]
 ROOT_URLCONF = 'config.urls'
+
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5000',
+    'http://localhost:8000',
+    'https://your-netlify-site.netlify.app',
+]
+
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
