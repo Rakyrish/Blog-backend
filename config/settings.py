@@ -106,6 +106,7 @@ CORS_ORIGIN_WHITELIST = (
 'http://localhost:5000',
 'http://localhost:8000',
 'https://your-netlify-site.netlify.app'
+'https://blog-backend-1-mxtg.onrender.com'
 )
 
 # CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for development; restrict in production
@@ -120,6 +121,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5000',
     'http://localhost:8000',
     'https://your-netlify-site.netlify.app',  # <-- add this if you're using Netlify
+    'https://blog-backend-1-mxtg.onrender.com'
 ]
 
 
@@ -128,6 +130,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5000',  # Match frontend origin
     'http://localhost:8000',
     'https://your-netlify-site.netlify.app'  # Add other origins if needed
+    'https://blog-backend-1-mxtg.onrender.com'
 ]
 
 # CORS_ALLOW_CREDENTIALS = True
@@ -144,6 +147,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5000',
     'http://localhost:8000',
     'https://your-netlify-site.netlify.app',
+    'https://blog-backend-1-mxtg.onrender.com'
 ]
 
 
@@ -200,7 +204,7 @@ DATABASES = {
     )
 }
 
-print("Database configuration:", os.getenv("DATABASE_URL"))
+# print("Database configuration:", os.getenv("DATABASE_URL"))
 
 
 
